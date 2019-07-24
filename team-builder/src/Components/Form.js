@@ -1,11 +1,13 @@
 import React from 'react';
 import { useState } from 'react';
 import { Data } from '../Data/Data'
+import UserList from './UserList';
 
-const Form = () => {
+const Form = (props) => {
 
     const [userInfo, setUserInfo] = useState({name: "", email: "", role: ""});
     const [userList, setUserList] = useState([]);
+    const [memberToEdit, setMemberToEdit] = useState({});
 
     const handleChange = event => {
         setUserInfo({...userInfo, [event.target.name]: [event.target.value]})
@@ -14,10 +16,22 @@ const Form = () => {
     const handleSubmit = event => {
         event.preventDefault();
         setUserList([...userList, userInfo]);
-
+        // setMyUserList([...userList, userInfo]);
         console.log('userInfo', userInfo);
         console.log('userList', userList);
     }
+
+    // console.log(props.list); 
+    const edit = (item) => {
+        console.log('item', item);
+        console.log('userList', userList);
+        const userIndex = userList.findIndex(user => {
+            return user.name === item.name;
+        })
+        console.log('userIndex', userIndex);
+        setMemberToEdit(userList[userIndex]);
+    }
+    console.log('memberToEdit', memberToEdit);
 
     return (
         <>
@@ -44,7 +58,7 @@ const Form = () => {
                     Role:
                     <select 
                         name="role"
-                        onchange={event => handleChange(event)}
+                        onChange={event => handleChange(event)}
                     >
                         <option value="CEO">CEO</option>
                         <option value="team lead">Team Lead</option>
@@ -56,6 +70,20 @@ const Form = () => {
                 </label>
                 <button>Submit</button>
             </form>
+            {/* <UserList list={userList} /> */}
+            
+            <div>
+                {
+                    userList.map(item => {
+                        return (
+                            <div key={item.name}>
+                                <p>Name: {item.name} Email: {item.email} Role: {item.role}</p>
+                                <button onClick={() => edit(item)}>Edit</button>
+                            </div>
+                        )
+                    })
+                }    
+            </div>
         </>
     )
 }
